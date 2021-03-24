@@ -6,9 +6,6 @@
  */
 namespace BasicApp\Entity;
 
-abstract class BaseEntity extends \CodeIgniter\Entity
+trait EntityTrait
 {
-
-    use EntityTrait;
-
 }

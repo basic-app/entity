@@ -31,6 +31,8 @@ trait EntityTrait
 
     public function fill(array $data = null, bool $allowedOnly = false)
     {
+        $data = array_merge($this->defaultAttributes($data), $data ?? []);
+
         if ($allowedOnly && ($this->allowedAttributes !== null))
         {
             if ($data)
@@ -46,6 +48,16 @@ trait EntityTrait
         }
 
         return parent::fill($data, false);
+    }
+
+    public function defaultAttributes(array $data = null) : array
+    {
+        return [];
+    }
+
+    public function setAttributes(array $data)
+    {
+        return parent::setAttributes(array_merge($this->defaultAttributes($data), $data));
     }
 
 }

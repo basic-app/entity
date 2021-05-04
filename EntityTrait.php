@@ -11,6 +11,13 @@ trait EntityTrait
 
     protected $allowedAttributes = null;
 
+    public function __construct(array $data = null)
+    {
+        $data = array_merge($this->defaultAttributes($data), $data ?? []);
+
+        parent::__construct($data);
+    }
+
     public function toArray(bool $onlyChanged = false, bool $cast = true, bool $recursive = false) : array
     {
         $return = parent::toArray($onlyChanged, $cast, $recursive);
@@ -31,8 +38,6 @@ trait EntityTrait
 
     public function fill(array $data = null, bool $allowedOnly = false)
     {
-        $data = array_merge($this->defaultAttributes($data), $data ?? []);
-
         if ($allowedOnly && ($this->allowedAttributes !== null))
         {
             if ($data)

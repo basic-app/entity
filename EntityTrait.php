@@ -9,17 +9,17 @@ namespace BasicApp\Entity;
 trait EntityTrait
 {
 
-    protected $allowedFields = null;
+    protected $allowedAttributes = null;
 
     public function toArray(bool $onlyChanged = false, bool $cast = true, bool $recursive = false) : array
     {
         $return = parent::toArray($onlyChanged, $cast, $recursive);
 
-        if ($this->allowedFields !== null)
+        if ($this->allowedAttributes !== null)
         {
             foreach($return as $key => $value)
             {
-                if (array_search($key, $this->allowedFields) === false)
+                if (array_search($key, $this->allowedAttributes) === false)
                 {
                     unset($return[$key]);
                 }
@@ -31,13 +31,13 @@ trait EntityTrait
 
     public function fill(array $data = null, bool $allowedOnly = false)
     {
-        if ($allowedOnly && ($this->allowedFields !== null))
+        if ($allowedOnly && ($this->allowedAttributes !== null))
         {
             if ($data)
             {
                 foreach($data as $key => $value)
                 {
-                    if (array_search($key, $this->allowedFields) === false)
+                    if (array_search($key, $this->allowedAttributes) === false)
                     {
                         unset($data[$key]);
                     }

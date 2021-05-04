@@ -10,16 +10,5 @@ abstract class BaseEntity extends \CodeIgniter\Entity
 {
 
     use EntityTrait;
-
-    public function __construct(array $data = null)
-    {
-        parent::__construct($data);
-
-        $this->init();
-    }
-
-    protected function init()
-    {
-    }
-
+    
 }

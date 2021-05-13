@@ -10,5 +10,7 @@ abstract class BaseEntity extends \CodeIgniter\Entity
 {
 
     use EntityTrait;
+
+    protected $dates = [];
     
 }

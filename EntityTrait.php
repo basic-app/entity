@@ -52,7 +52,7 @@ trait EntityTrait
             }
         }
 
-        return parent::fill($data, false);
+        return parent::fill($data);
     }
 
     public function defaultAttributes(array $data = null) : array

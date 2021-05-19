@@ -18,15 +18,22 @@ trait EntityTrait
         parent::__construct($data);
     }
 
+    public function getAllowedAttributes()
+    {
+        return $this->allowedAttributes;
+    }
+
     public function toArray(bool $onlyChanged = false, bool $cast = true, bool $recursive = false) : array
     {
         $return = parent::toArray($onlyChanged, $cast, $recursive);
 
-        if ($this->allowedAttributes !== null)
+        $allowedAttributes = $this->getAllowedAttributes();
+
+        if ($allowedAttributes !== null)
         {
             foreach($return as $key => $value)
             {
-                if (array_search($key, $this->allowedAttributes) === false)
+                if (array_search($key, $allowedAttributes) === false)
                 {
                     unset($return[$key]);
                 }
@@ -38,13 +45,15 @@ trait EntityTrait
 
     public function fill(array $data = null, bool $allowedOnly = false)
     {
-        if ($allowedOnly && ($this->allowedAttributes !== null))
+        $allowedAttributes = $this->getAllowedAttributes();
+
+        if ($allowedOnly && ($allowedAttributes !== null))
         {
             if ($data)
             {
                 foreach($data as $key => $value)
                 {
-                    if (array_search($key, $this->allowedAttributes) === false)
+                    if (array_search($key, $allowedAttributes) === false)
                     {
                         unset($data[$key]);
                     }

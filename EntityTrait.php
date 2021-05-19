@@ -11,6 +11,8 @@ trait EntityTrait
 
     protected $allowedAttributes = null;
 
+    protected $nullableAttributes = [];
+
     public function __construct(array $data = null)
     {
         $data = array_merge($this->defaultAttributes($data), $data ?? []);
@@ -18,7 +20,7 @@ trait EntityTrait
         parent::__construct($data);
     }
 
-    public function getAllowedAttributes()
+    public function getAllowedAttributes() : ?array
     {
         return $this->allowedAttributes;
     }
@@ -72,6 +74,16 @@ trait EntityTrait
     public function setAttributes(array $data)
     {
         return parent::setAttributes(array_merge($this->defaultAttributes($data), $data));
+    }
+
+    public function __set(string $key, $value = null)
+    {
+        if (!$value && (array_search($key, $this->nullableAttributes) !== false))
+        {
+            $value = null;
+        }
+
+        return parent::__set($key, $value);
     }
 
 }

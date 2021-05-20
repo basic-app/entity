@@ -38,13 +38,13 @@ trait EntityTrait
         return $return;
     }
 
-    public function fill(array $data = null)
+    public function fill(array $data = null, bool $allowedOnly = false)
     {
-        $allowedAttributes = $this->getAllowedAttributes();
-
-        if ($allowedAttributes)
+        if ($allowedOnly)
         {
-            if ($data)
+            $allowedAttributes = $this->getAllowedAttributes();
+
+            if ($allowedAttributes && $data)
             {
                 foreach($data as $key => $value)
                 {
@@ -52,11 +52,11 @@ trait EntityTrait
                     {
                         unset($data[$key]);
                     }
-                }
+                }            
             }
         }
 
-        return parent::fill($data);
+        return $this->fill($data);
     }
 
     public function __set(string $key, $value = null)

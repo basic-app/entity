@@ -56,7 +56,7 @@ trait EntityTrait
             }
         }
 
-        return $this->fill($data);
+        return parent::fill($data);
     }
 
     public function __set(string $key, $value = null)

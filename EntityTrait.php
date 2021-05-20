@@ -9,18 +9,11 @@ namespace BasicApp\Entity;
 trait EntityTrait
 {
 
-    protected $allowedAttributes = null;
+    protected $allowedAttributes = [];
 
     protected $nullableAttributes = [];
 
-    public function __construct(array $data = null)
-    {
-        $data = array_merge($this->defaultAttributes($data), $data ?? []);
-
-        parent::__construct($data);
-    }
-
-    public function getAllowedAttributes() : ?array
+    public function getAllowedAttributes() : array
     {
         return $this->allowedAttributes;
     }
@@ -31,7 +24,7 @@ trait EntityTrait
 
         $allowedAttributes = $this->getAllowedAttributes();
 
-        if ($allowedAttributes !== null)
+        if ($allowedAttributes)
         {
             foreach($return as $key => $value)
             {
@@ -45,11 +38,11 @@ trait EntityTrait
         return $return;
     }
 
-    public function fill(array $data = null, bool $allowedOnly = false)
+    public function fill(array $data = null)
     {
         $allowedAttributes = $this->getAllowedAttributes();
 
-        if ($allowedOnly && ($allowedAttributes !== null))
+        if ($allowedAttributes)
         {
             if ($data)
             {
@@ -64,16 +57,6 @@ trait EntityTrait
         }
 
         return parent::fill($data);
-    }
-
-    public function defaultAttributes(array $data = null) : array
-    {
-        return [];
-    }
-
-    public function setAttributes(array $data)
-    {
-        return parent::setAttributes(array_merge($this->defaultAttributes($data), $data));
     }
 
     public function __set(string $key, $value = null)

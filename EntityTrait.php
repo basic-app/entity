@@ -9,13 +9,18 @@ namespace BasicApp\Entity;
 trait EntityTrait
 {
 
-    protected $allowedAttributes = [];
+    protected $allowedAttributes;
 
-    protected $nullableAttributes = [];
+    protected $nullableAttributes;
 
-    public function getAllowedAttributes() : array
+    public function getAllowedAttributes() : ?array
     {
         return $this->allowedAttributes;
+    }
+
+    public function getNullableAttributes() : ?array
+    {
+        return $this->nullableAttributes;
     }
 
     public function toArray(bool $onlyChanged = false, bool $cast = true, bool $recursive = false) : array
@@ -24,7 +29,7 @@ trait EntityTrait
 
         $allowedAttributes = $this->getAllowedAttributes();
 
-        if ($allowedAttributes)
+        if ($allowedAttributes !== null)
         {
             foreach($return as $key => $value)
             {
@@ -44,7 +49,7 @@ trait EntityTrait
         {
             $allowedAttributes = $this->getAllowedAttributes();
 
-            if ($allowedAttributes && $data)
+            if (($allowedAttributes !== null) && $data)
             {
                 foreach($data as $key => $value)
                 {
@@ -61,7 +66,9 @@ trait EntityTrait
 
     public function __set(string $key, $value = null)
     {
-        if (!$value && (array_search($key, $this->nullableAttributes) !== false))
+        $nullableAttributes = $this->getNullableAttributes();
+
+        if (!$value && ($nullableAttributes !== null) && (array_search($key, $nullableAttributes) !== false))
         {
             $value = null;
         }

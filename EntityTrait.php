@@ -76,4 +76,41 @@ trait EntityTrait
         return parent::__set($key, $value);
     }
 
+    public function hasOne(string $modelName, $foreignKey, ?string $prefix = null) : ?\CodeIgniter\Entity\Entity 
+    {
+        $model = model($modelName, false);
+
+        if ($prefix)
+        {
+            $attributes = $this->attributes;
+
+            foreach($attributes as $key => $value)
+            {
+                if (mb_substr($key, 0, mb_strlen($prefix)) != $prefix)
+                {
+                    unset($attributes[$key]);
+                }
+            }
+
+            if ($attributes)
+            {
+                return $model->createEntity($attributes);
+            }
+        }
+
+        if (is_array($foreignKey))
+        {
+            $where = [];
+
+            foreach($foreignKey as $to => $from)
+            {
+                $where[$to] = $this->$from;
+            }
+
+            return $model->where($where)->first();
+        }
+
+        return $model->findOne($this->$foreignKey);
+    }    
+
 }

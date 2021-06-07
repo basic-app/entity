@@ -111,6 +111,25 @@ trait EntityTrait
         }
 
         return $model->findOne($this->$foreignKey);
-    }    
+    }
+
+    public function setAttribute(string $attribute, $value, bool $setOriginal = false)
+    {
+        $this->attributes[$attribute] = $value;
+
+        if ($setOriginal)
+        {
+            $this->setOriginal($attribute, $value);
+        }
+
+        return $this;
+    }
+
+    public function setOriginal(string $attribute, $value)
+    {
+        $this->original[$attribute] = $value;
+    
+        return $this;
+    }
 
 }

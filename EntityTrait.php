@@ -76,23 +76,35 @@ trait EntityTrait
         return parent::__set($key, $value);
     }
 
-    public function hasOne(string $modelName, $foreignKey, ?string $prefix = null) : ?\CodeIgniter\Entity\Entity 
+    public function hasOne(string $modelName, $foreignKey, ?string $prefix = null, bool $keepPrefix = true) : ?\CodeIgniter\Entity\Entity 
     {
         $model = model($modelName, false);
 
         if ($prefix)
         {
-            $attributes = $this->attributes;
+            $attributes = [];
 
-            foreach($attributes as $key => $value)
+            $notEmpty = false;
+
+            foreach($this->attributes as $key => $value)
             {
-                if (mb_substr($key, 0, mb_strlen($prefix)) != $prefix)
+                if (mb_substr($key, 0, mb_strlen($prefix)) == $prefix)
                 {
-                    unset($attributes[$key]);
+                    if (!$keepPrefix)
+                    {
+                        $key = mb_substr($key, mb_strlen($prefix));
+                    }
+
+                    $attributes[$key] = $value;
+
+                    if ($value)
+                    {
+                        $notEmpty = true;
+                    }
                 }
             }
 
-            if ($attributes)
+            if ($notEmpty)
             {
                 return $model->createEntity($attributes);
             }

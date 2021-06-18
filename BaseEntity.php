@@ -6,11 +6,18 @@
  */
 namespace BasicApp\Entity;
 
+use BasicApp\Entity\Casts\NullableCast;
+
 abstract class BaseEntity extends \CodeIgniter\Entity\Entity
 {
 
     use EntityTrait;
 
-    protected $dates = [];
+    public function __construct(...$params)
+    {
+        parent::__construct(...$params);
+
+        $this->castHandlers['nullable'] = NullableCast::class;
+    }
     
 }

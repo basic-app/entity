@@ -6,34 +6,22 @@
  */
 namespace BasicApp\Entity;
 
+use CodeIgniter\Entity\Entity;
+
 trait EntityTrait
 {
 
-    protected $allowedAttributes;
-
-    protected $nullableAttributes;
-
-    public function getAllowedAttributes() : ?array
-    {
-        return $this->allowedAttributes;
-    }
-
-    public function getNullableAttributes() : ?array
-    {
-        return $this->nullableAttributes;
-    }
+    protected $safeAttributes;
 
     public function toArray(bool $onlyChanged = false, bool $cast = true, bool $recursive = false) : array
     {
         $return = parent::toArray($onlyChanged, $cast, $recursive);
 
-        $allowedAttributes = $this->getAllowedAttributes();
-
-        if ($allowedAttributes !== null)
+        if ($this->safeAttributes !== null)
         {
             foreach($return as $key => $value)
             {
-                if (array_search($key, $allowedAttributes) === false)
+                if (array_search($key, $this->safeAttributes) === false)
                 {
                     unset($return[$key]);
                 }
@@ -43,40 +31,28 @@ trait EntityTrait
         return $return;
     }
 
-    public function fill(array $data = null, bool $allowedOnly = false)
+    public function fill(array $data = null)
     {
-        if ($allowedOnly)
+        if (($this->safeAttributes !== null) && $data)
         {
-            $allowedAttributes = $this->getAllowedAttributes();
-
-            if (($allowedAttributes !== null) && $data)
+            foreach($data as $key => $value)
             {
-                foreach($data as $key => $value)
+                if (array_search($key, $this->safeAttributes) === false)
                 {
-                    if (array_search($key, $allowedAttributes) === false)
-                    {
-                        unset($data[$key]);
-                    }
-                }            
-            }
+                    unset($data[$key]);
+                }
+            }            
         }
 
         return parent::fill($data);
     }
 
-    public function __set(string $key, $value = null)
+    public function unsafeFill(array $data = null)
     {
-        $nullableAttributes = $this->getNullableAttributes();
-
-        if (!$value && ($nullableAttributes !== null) && (array_search($key, $nullableAttributes) !== false))
-        {
-            $value = null;
-        }
-
-        return parent::__set($key, $value);
+        return parent::fill($data);
     }
 
-    public function hasOne(string $modelName, $foreignKey, ?string $prefix = null, bool $keepPrefix = true) : ?\CodeIgniter\Entity\Entity 
+    public function hasOne(string $modelName, $foreignKey, ?string $prefix = null, bool $keepPrefix = true) : ?Entity 
     {
         $model = model($modelName, false);
 

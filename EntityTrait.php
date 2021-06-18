@@ -31,6 +31,16 @@ trait EntityTrait
         return $return;
     }
 
+    public function isAttributeSafe(string $attribute) : bool
+    {
+        if ($this->safeAttributes !== null)
+        {
+            return array_search($attribute, $this->safeAttributes);
+        }
+
+        return true;
+    }
+
     public function fill(array $data = null)
     {
         if (($this->safeAttributes !== null) && $data)

@@ -18,6 +18,12 @@ abstract class BaseEntity extends \CodeIgniter\Entity\Entity
         $this->castHandlers['nullable'] = NullableCast::class;
 
         parent::__construct(...$params);
+
+        $this->initialize();
+    }
+
+    protected function initialize()
+    {
     }
     
 }

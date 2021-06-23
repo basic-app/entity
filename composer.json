@@ -5,5 +5,8 @@
         "psr-4": {
             "BasicApp\\Entity\\" : ""
         }
-    }
+    },
+    "require": {
+        "webmozart/assert" : "*"
+    } 
 }

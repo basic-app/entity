@@ -6,6 +6,6 @@
  */
 namespace BasicApp\Entity;
 
-class ActiveEntity extends ActiveEntity
+class ActiveEntity extends BaseActiveEntity
 {
 }

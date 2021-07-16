@@ -32,14 +32,37 @@ trait ActiveEntityTrait
 
         $this->model = model($this->modelName, false);
 
-        Assert::notEmpty($this->model, lang('Model not found: "{0}".', [$this->modelName]));
+        Assert::notEmpty($this->model, lang('Model not found: {0}', [$this->modelName]));
 
         parent::__construct($data);
-    }    
+    }
 
-    public function save(&$errors = null) : bool
+    public function beforeSave(&$error = null) : bool
     {
-        return $this->model->save($this, $errors);
+        return true;
+    }
+
+    public function afterSave()
+    {
+    }
+
+    public function save(&$error = null) : bool
+    {
+        if (!$this->beforeSave($error))
+        {
+            return false;
+        }
+
+        $return = $this->model->save($this, $error);
+    
+        if (!$return)
+        {
+            return false;
+        }
+
+        $this->afterSave();
+
+        return true;
     }
 
     public function saveOrFail($error = null)
